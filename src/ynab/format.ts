@@ -85,7 +85,7 @@ export function formatMoney(
 
 /**
  * Format a single transaction into a compact string.
- * Format: "2024-01-15  $45.67  Grocery Store  Groceries  checkmark"
+ * Format: "[id]  2024-01-15  $45.67  Grocery Store  Groceries  checkmark"
  * Cleared indicators: checkmark = cleared, bullet = uncleared, R = reconciled
  * If memo exists, add it on a new indented line.
  * If subtransactions exist, list them indented.
@@ -104,7 +104,7 @@ export function formatTransaction(
   const amount = formatMoney(txn.amount, currency);
 
   let line =
-    `${txn.date}  ${amount}  ${payee}  ${category}  ${clearedIndicator}`;
+    `[${txn.id}]  ${txn.date}  ${amount}  ${payee}  ${category}  ${clearedIndicator}`;
 
   if (txn.memo != null && txn.memo.length > 0) {
     line += `\n    Memo: ${txn.memo}`;

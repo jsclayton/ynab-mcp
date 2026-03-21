@@ -155,6 +155,7 @@ describe("formatMoney", () => {
 describe("formatTransaction", () => {
   it("formats a basic cleared transaction", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-01-15",
       amount: -45670,
       payee_name: "Grocery Store",
@@ -164,12 +165,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713",
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713",
     );
   });
 
   it("formats an uncleared transaction with bullet indicator", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-02-20",
       amount: -12000,
       payee_name: "Coffee Shop",
@@ -179,12 +181,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-02-20  ($12.00)  Coffee Shop  Dining Out  \u2022",
+      "[txn-test-id]  2024-02-20  ($12.00)  Coffee Shop  Dining Out  \u2022",
     );
   });
 
   it("formats a reconciled transaction with R indicator", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-03-01",
       amount: 5000000,
       payee_name: "Employer Inc",
@@ -194,12 +197,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-03-01  $5,000.00  Employer Inc  Income  R",
+      "[txn-test-id]  2024-03-01  $5,000.00  Employer Inc  Income  R",
     );
   });
 
   it("includes memo on a new indented line", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-01-15",
       amount: -45670,
       payee_name: "Grocery Store",
@@ -210,12 +214,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713\n    Memo: Weekly groceries",
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713\n    Memo: Weekly groceries",
     );
   });
 
   it("shows dash for null payee", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-01-15",
       amount: -10000,
       payee_name: null,
@@ -225,12 +230,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-01-15  ($10.00)  \u2014  Groceries  \u2713",
+      "[txn-test-id]  2024-01-15  ($10.00)  \u2014  Groceries  \u2713",
     );
   });
 
   it("shows Uncategorized for null category", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-01-15",
       amount: -10000,
       payee_name: "Store",
@@ -240,12 +246,13 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "2024-01-15  ($10.00)  Store  Uncategorized  \u2713",
+      "[txn-test-id]  2024-01-15  ($10.00)  Store  Uncategorized  \u2713",
     );
   });
 
   it("formats transaction with subtransactions", () => {
     const txn = makeTransaction({
+      id: "txn-test-id",
       date: "2024-01-15",
       amount: -75000,
       payee_name: "Walmart",
@@ -271,7 +278,7 @@ describe("formatTransaction", () => {
     assertEquals(lines.length, 3);
     assertEquals(
       lines[0],
-      "2024-01-15  ($75.00)  Walmart  Split  \u2713",
+      "[txn-test-id]  2024-01-15  ($75.00)  Walmart  Split  \u2713",
     );
     // Subtransaction with null payee_name inherits parent payee
     assertEquals(
