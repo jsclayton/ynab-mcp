@@ -1,6 +1,6 @@
 {
   "name": "@jsclayton/ynab-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "exports": {
     ".": "./src/stdio.ts",
     "./http": "./src/http.ts"

@@ -1,3 +1,13 @@
+/**
+ * YNAB MCP server over Streamable HTTP transport via Hono.
+ *
+ * Exposes `/mcp` (MCP endpoint) and `/health` (health check).
+ * ```
+ * YNAB_ACCESS_TOKEN=... deno run --allow-net --allow-env jsr:@jsclayton/ynab-mcp/http
+ * ```
+ *
+ * @module
+ */
 import { Hono } from "hono";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { loadConfig } from "./config.ts";
