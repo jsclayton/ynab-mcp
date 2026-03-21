@@ -1,5 +1,5 @@
 import {
-  McpServer,
+  type McpServer,
   ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { YnabClient } from "../ynab/client.ts";

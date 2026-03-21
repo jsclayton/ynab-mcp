@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { type Config } from "./config.ts";
+import type { Config } from "./config.ts";
 import { YnabClient } from "./ynab/client.ts";
 import { Cache } from "./ynab/cache.ts";
 import { registerPlanTools } from "./tools/plans.ts";

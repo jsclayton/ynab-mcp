@@ -13,21 +13,14 @@ management through natural conversation.
 
 ### Claude Desktop
 
-Add to your Claude Desktop config
-(`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
   "mcpServers": {
     "ynab": {
       "command": "deno",
-      "args": [
-        "run",
-        "--allow-net",
-        "--allow-env",
-        "--allow-read",
-        "/path/to/ynab-mcp/src/stdio.ts"
-      ],
+      "args": ["run", "--allow-net", "--allow-env", "jsr:@jsclayton/ynab-mcp"],
       "env": {
         "YNAB_ACCESS_TOKEN": "your-token-here"
       }
@@ -38,18 +31,18 @@ Add to your Claude Desktop config
 
 Restart Claude Desktop. Ask _"Show me my budget overview"_ to get started.
 
+> **From source:** Replace the JSR specifier with the path to `src/stdio.ts` if running from a local clone.
+
 ### Claude Code
 
 ```bash
-export YNAB_ACCESS_TOKEN=your-token-here
-deno task start
+YNAB_ACCESS_TOKEN=your-token-here deno run --allow-net --allow-env jsr:@jsclayton/ynab-mcp
 ```
 
 ### HTTP Server
 
 ```bash
-export YNAB_ACCESS_TOKEN=your-token-here
-deno task serve
+YNAB_ACCESS_TOKEN=your-token-here deno run --allow-net --allow-env jsr:@jsclayton/ynab-mcp/http
 # → http://localhost:8080/mcp
 ```
 

@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerReconciliationPrompt } from "./reconciliation.ts";
 import { registerSpendingAnalysisPrompt } from "./spending-analysis.ts";
 import { registerCategorizePrompt } from "./categorize.ts";

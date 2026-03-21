@@ -1,4 +1,14 @@
 {
+  "name": "@jsclayton/ynab-mcp",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/stdio.ts",
+    "./http": "./src/http.ts"
+  },
+  "publish": {
+    "include": ["src/", "deno.json", "LICENSE.txt", "README.md"],
+    "exclude": ["src/testing/", "**/*_test.ts"]
+  },
   "imports": {
     "@modelcontextprotocol/sdk/server/mcp.js": "npm:@modelcontextprotocol/sdk@^1.27.1/server/mcp.js",
     "@modelcontextprotocol/sdk/server/stdio.js": "npm:@modelcontextprotocol/sdk@^1.27.1/server/stdio.js",
