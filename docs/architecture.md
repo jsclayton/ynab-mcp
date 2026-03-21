@@ -121,8 +121,9 @@ text.
 - **Milliunits:** YNAB stores amounts as milliunits (÷1000 for dollars).
   `dollarsToMilliunits()` / `milliunitsToDollars()` handle conversion. Tool
   interfaces accept dollars.
-- **Transactions:** Compact single-line format with cleared indicators (✓/•/R),
-  optional memo line, subtransaction expansion.
+- **Transactions:** Compact single-line format: `[id]  date  amount  payee  category  cleared`
+  with cleared indicators (✓/•/R), optional memo line, subtransaction expansion.
+  The leading ID allows callers to reference transactions in `modify_transactions`.
 
 ## Portability
 
