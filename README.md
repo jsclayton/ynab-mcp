@@ -8,7 +8,7 @@ management through natural conversation.
 
 ### Prerequisites
 
-- [Deno](https://deno.com) v2+
+- [Deno](https://docs.deno.com/runtime/getting_started/installation/) v2+
 - A [YNAB Personal Access Token](https://app.ynab.com/settings/developer)
 
 ### Claude Desktop
