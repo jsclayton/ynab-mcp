@@ -96,6 +96,8 @@ export function formatTransaction(
 ): string {
   const payee = txn.payee_name ?? "\u2014";
   const category = txn.category_name ?? "Uncategorized";
+  const account = txn.account_name;
+  const approvedIndicator = txn.approved ? "" : "\u2691 ";
   const clearedIndicator = txn.cleared === "cleared"
     ? "\u2713"
     : txn.cleared === "reconciled"
@@ -104,7 +106,18 @@ export function formatTransaction(
   const amount = formatMoney(txn.amount, currency);
 
   let line =
-    `[${txn.id}]  ${txn.date}  ${amount}  ${payee}  ${category}  ${clearedIndicator}`;
+    `[${txn.id}]  ${txn.date}  ${amount}  ${payee}  ${category}  ${account}  ${approvedIndicator}${clearedIndicator}`;
+
+  if (
+    txn.import_payee_name != null && txn.import_payee_name.length > 0 &&
+    txn.import_payee_name !== txn.payee_name
+  ) {
+    line += `\n    Bank payee: ${txn.import_payee_name}`;
+  }
+
+  if (txn.matched_transaction_id != null) {
+    line += `\n    Matched: [${txn.matched_transaction_id}]`;
+  }
 
   if (txn.memo != null && txn.memo.length > 0) {
     line += `\n    Memo: ${txn.memo}`;
@@ -138,7 +151,7 @@ export function formatAccount(
   const cleared = formatMoney(account.cleared_balance, currency);
   const uncleared = formatMoney(account.uncleared_balance, currency);
   let line =
-    `${account.name} (${account.type}) \u2014 ${balance}  [cleared: ${cleared}  uncleared: ${uncleared}]`;
+    `[${account.id}]  ${account.name} (${account.type}) \u2014 ${balance}  [cleared: ${cleared}  uncleared: ${uncleared}]`;
   if (account.closed) {
     line += " (closed)";
   }
@@ -159,7 +172,7 @@ export function formatCategory(
   const available = formatMoney(category.balance, currency);
 
   let line =
-    `${category.name} \u2014 Budgeted: ${budgeted}  Spent: ${spent}  Available: ${available}`;
+    `[${category.id}]  ${category.name} \u2014 Budgeted: ${budgeted}  Spent: ${spent}  Available: ${available}`;
 
   if (category.hidden) {
     line += " (hidden)";
@@ -285,7 +298,7 @@ export function formatScheduledTransaction(
   const freq = formatFrequency(st.frequency);
 
   let line =
-    `${freq} \u2014 ${amount}  ${payee}  ${category}  Next: ${st.date_next}`;
+    `[${st.id}]  ${freq} \u2014 ${amount}  ${payee}  ${category}  Next: ${st.date_next}`;
 
   if (st.memo != null && st.memo.length > 0) {
     line += `\n    Memo: ${st.memo}`;

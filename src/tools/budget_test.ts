@@ -171,8 +171,9 @@ describe("get_budget: overview", () => {
       0,
     );
 
-    // Verify account formatting
+    // Verify account formatting includes ID and name
     const checkingFmt = formatAccount(onBudget[0], currency);
+    assertEquals(checkingFmt.includes(`[${onBudget[0].id}]`), true);
     assertEquals(checkingFmt.includes("Checking"), true);
     assertEquals(checkingFmt.includes("$1,500.00"), true);
 
@@ -313,8 +314,9 @@ describe("get_budget: month", () => {
     assertEquals(byGroup.get("Everyday")!.length, 1); // hidden/deleted excluded
     assertEquals(byGroup.get("Bills")!.length, 2);
 
-    // Verify category formatting
+    // Verify category formatting includes ID
     const groceryFmt = formatCategory(groceries, currency);
+    assertEquals(groceryFmt.includes(`[${groceries.id}]`), true);
     assertEquals(groceryFmt.includes("Groceries"), true);
     assertEquals(groceryFmt.includes("$500.00"), true);
     assertEquals(groceryFmt.includes("($300.00)"), true);
@@ -570,9 +572,10 @@ describe("get_budget: scheduled", () => {
     // Deleted transaction filtered out
     assertEquals(txns.length, 2);
 
-    // Verify formatting
+    // Verify formatting includes ID
     const currency = TEST_CURRENCY;
     const netflixFmt = formatScheduledTransaction(txns[0], currency);
+    assertEquals(netflixFmt.includes(`[${txns[0].id}]`), true);
     assertEquals(netflixFmt.includes("Every month"), true);
     assertEquals(netflixFmt.includes("Netflix"), true);
     assertEquals(netflixFmt.includes("Subscriptions"), true);
@@ -580,6 +583,7 @@ describe("get_budget: scheduled", () => {
     assertEquals(netflixFmt.includes("($15.99)"), true);
 
     const rentFmt = formatScheduledTransaction(txns[1], currency);
+    assertEquals(rentFmt.includes(`[${txns[1].id}]`), true);
     assertEquals(rentFmt.includes("($1,500.00)"), true);
     assertEquals(rentFmt.includes("Landlord"), true);
   });

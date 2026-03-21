@@ -42,7 +42,7 @@ Please follow these steps:
    - Ask if I want to create an adjustment transaction
    - If yes, use modify_transactions to create an adjustment
 
-5. For all confirmed transactions, use modify_transactions with action "update" to set their cleared status to "cleared".
+5. For all confirmed transactions, use a single modify_transactions call with action "update", passing all confirmed transactions in the \`updates\` array to clear them in one batch.
 
 6. Summarize what was done: how many transactions cleared, final balance, any adjustments made.
 

@@ -378,7 +378,7 @@ describe("get_transactions", () => {
       assertStringIncludes(summaryLine, "$29.33");
     });
 
-    it("each transaction includes date, amount, payee, category, and cleared indicator", () => {
+    it("each transaction includes date, amount, payee, category, account, and cleared indicator", () => {
       const plan = makePlan({ id: planId, name: planName });
       const currency = plan.currency_format;
 
@@ -387,6 +387,7 @@ describe("get_transactions", () => {
         amount: -78900,
         payee_name: "Coffee Shop",
         category_name: "Dining Out",
+        account_name: "Checking",
         cleared: "cleared",
       });
 
@@ -396,6 +397,7 @@ describe("get_transactions", () => {
       assertStringIncludes(formatted, "($78.90)");
       assertStringIncludes(formatted, "Coffee Shop");
       assertStringIncludes(formatted, "Dining Out");
+      assertStringIncludes(formatted, "Checking");
       assertStringIncludes(formatted, "\u2713"); // cleared checkmark
     });
 

@@ -165,7 +165,7 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713",
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  Checking  \u2713",
     );
   });
 
@@ -181,7 +181,7 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-02-20  ($12.00)  Coffee Shop  Dining Out  \u2022",
+      "[txn-test-id]  2024-02-20  ($12.00)  Coffee Shop  Dining Out  Checking  \u2022",
     );
   });
 
@@ -197,7 +197,67 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-03-01  $5,000.00  Employer Inc  Income  R",
+      "[txn-test-id]  2024-03-01  $5,000.00  Employer Inc  Income  Checking  R",
+    );
+  });
+
+  it("shows unapproved indicator when not approved", () => {
+    const txn = makeTransaction({
+      id: "txn-test-id",
+      date: "2024-01-15",
+      amount: -45670,
+      payee_name: "Grocery Store",
+      category_name: "Groceries",
+      cleared: "uncleared",
+      approved: false,
+    });
+    const result = formatTransaction(txn, TEST_CURRENCY);
+    assertEquals(
+      result,
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  Checking  \u2691 \u2022",
+    );
+  });
+
+  it("shows bank payee when different from payee name", () => {
+    const txn = makeTransaction({
+      id: "txn-test-id",
+      date: "2024-01-15",
+      amount: -45670,
+      payee_name: "Grocery Store",
+      category_name: "Groceries",
+      cleared: "cleared",
+      import_payee_name: "GROCERY STORE #1234",
+    });
+    const result = formatTransaction(txn, TEST_CURRENCY);
+    assertEquals(
+      result,
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  Checking  \u2713\n    Bank payee: GROCERY STORE #1234",
+    );
+  });
+
+  it("does not show bank payee when same as payee name", () => {
+    const txn = makeTransaction({
+      import_payee_name: "Grocery Store",
+      payee_name: "Grocery Store",
+    });
+    const result = formatTransaction(txn, TEST_CURRENCY);
+    assertEquals(result.includes("Bank payee:"), false);
+  });
+
+  it("shows matched transaction id when present", () => {
+    const txn = makeTransaction({
+      id: "txn-test-id",
+      date: "2024-01-15",
+      amount: -45670,
+      payee_name: "Grocery Store",
+      category_name: "Groceries",
+      cleared: "cleared",
+      matched_transaction_id: "matched-123",
+    });
+    const result = formatTransaction(txn, TEST_CURRENCY);
+    assertEquals(
+      result,
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  Checking  \u2713\n    Matched: [matched-123]",
     );
   });
 
@@ -214,7 +274,7 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  \u2713\n    Memo: Weekly groceries",
+      "[txn-test-id]  2024-01-15  ($45.67)  Grocery Store  Groceries  Checking  \u2713\n    Memo: Weekly groceries",
     );
   });
 
@@ -230,7 +290,7 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-01-15  ($10.00)  \u2014  Groceries  \u2713",
+      "[txn-test-id]  2024-01-15  ($10.00)  \u2014  Groceries  Checking  \u2713",
     );
   });
 
@@ -246,7 +306,7 @@ describe("formatTransaction", () => {
     const result = formatTransaction(txn, TEST_CURRENCY);
     assertEquals(
       result,
-      "[txn-test-id]  2024-01-15  ($10.00)  Store  Uncategorized  \u2713",
+      "[txn-test-id]  2024-01-15  ($10.00)  Store  Uncategorized  Checking  \u2713",
     );
   });
 
@@ -278,7 +338,7 @@ describe("formatTransaction", () => {
     assertEquals(lines.length, 3);
     assertEquals(
       lines[0],
-      "[txn-test-id]  2024-01-15  ($75.00)  Walmart  Split  \u2713",
+      "[txn-test-id]  2024-01-15  ($75.00)  Walmart  Split  Checking  \u2713",
     );
     // Subtransaction with null payee_name inherits parent payee
     assertEquals(
@@ -300,6 +360,7 @@ describe("formatTransaction", () => {
 describe("formatAccount", () => {
   it("formats a normal account with balances", () => {
     const account = makeAccount({
+      id: "acc-test-id",
       name: "Checking",
       type: "checking",
       balance: 1234560,
@@ -310,12 +371,13 @@ describe("formatAccount", () => {
     const result = formatAccount(account, TEST_CURRENCY);
     assertEquals(
       result,
-      "Checking (checking) \u2014 $1,234.56  [cleared: $1,200.00  uncleared: $34.56]",
+      "[acc-test-id]  Checking (checking) \u2014 $1,234.56  [cleared: $1,200.00  uncleared: $34.56]",
     );
   });
 
   it("appends (closed) for closed accounts", () => {
     const account = makeAccount({
+      id: "acc-test-id",
       name: "Old Savings",
       type: "savings",
       balance: 0,
@@ -326,12 +388,13 @@ describe("formatAccount", () => {
     const result = formatAccount(account, TEST_CURRENCY);
     assertEquals(
       result,
-      "Old Savings (savings) \u2014 $0.00  [cleared: $0.00  uncleared: $0.00] (closed)",
+      "[acc-test-id]  Old Savings (savings) \u2014 $0.00  [cleared: $0.00  uncleared: $0.00] (closed)",
     );
   });
 
   it("formats zero balance account", () => {
     const account = makeAccount({
+      id: "acc-test-id",
       name: "Empty",
       type: "checking",
       balance: 0,
@@ -341,7 +404,7 @@ describe("formatAccount", () => {
     const result = formatAccount(account, TEST_CURRENCY);
     assertEquals(
       result,
-      "Empty (checking) \u2014 $0.00  [cleared: $0.00  uncleared: $0.00]",
+      "[acc-test-id]  Empty (checking) \u2014 $0.00  [cleared: $0.00  uncleared: $0.00]",
     );
   });
 });
@@ -351,6 +414,7 @@ describe("formatAccount", () => {
 describe("formatCategory", () => {
   it("formats basic category with budget/spent/available", () => {
     const cat = makeCategory({
+      id: "cat-test-id",
       name: "Groceries",
       budgeted: 500000,
       activity: -345670,
@@ -359,12 +423,13 @@ describe("formatCategory", () => {
     const result = formatCategory(cat, TEST_CURRENCY);
     assertEquals(
       result,
-      "Groceries \u2014 Budgeted: $500.00  Spent: ($345.67)  Available: $154.33",
+      "[cat-test-id]  Groceries \u2014 Budgeted: $500.00  Spent: ($345.67)  Available: $154.33",
     );
   });
 
   it("includes goal info when goal_type is set", () => {
     const cat = makeCategory({
+      id: "cat-test-id",
       name: "Vacation",
       budgeted: 200000,
       activity: 0,
@@ -380,7 +445,7 @@ describe("formatCategory", () => {
     assertEquals(lines.length, 2);
     assertEquals(
       lines[0],
-      "Vacation \u2014 Budgeted: $200.00  Spent: $0.00  Available: $200.00",
+      "[cat-test-id]  Vacation \u2014 Budgeted: $200.00  Spent: $0.00  Available: $200.00",
     );
     assertEquals(
       lines[1],
@@ -390,6 +455,7 @@ describe("formatCategory", () => {
 
   it("appends (hidden) for hidden category", () => {
     const cat = makeCategory({
+      id: "cat-test-id",
       name: "Old Category",
       hidden: true,
       budgeted: 0,
@@ -399,12 +465,13 @@ describe("formatCategory", () => {
     const result = formatCategory(cat, TEST_CURRENCY);
     assertEquals(
       result,
-      "Old Category \u2014 Budgeted: $0.00  Spent: $0.00  Available: $0.00 (hidden)",
+      "[cat-test-id]  Old Category \u2014 Budgeted: $0.00  Spent: $0.00  Available: $0.00 (hidden)",
     );
   });
 
   it("shows underfunded amount in goal info", () => {
     const cat = makeCategory({
+      id: "cat-test-id",
       name: "Rent",
       budgeted: 500000,
       activity: 0,
@@ -431,12 +498,14 @@ describe("formatCategoryGroup", () => {
       name: "Everyday Expenses",
       categories: [
         makeCategory({
+          id: "cat-1",
           name: "Groceries",
           budgeted: 500000,
           activity: -200000,
           balance: 300000,
         }),
         makeCategory({
+          id: "cat-2",
           name: "Dining Out",
           budgeted: 100000,
           activity: -50000,
@@ -450,11 +519,11 @@ describe("formatCategoryGroup", () => {
     assertEquals(lines[0], "Everyday Expenses");
     assertEquals(
       lines[1],
-      "  Groceries \u2014 Budgeted: $500.00  Spent: ($200.00)  Available: $300.00",
+      "  [cat-1]  Groceries \u2014 Budgeted: $500.00  Spent: ($200.00)  Available: $300.00",
     );
     assertEquals(
       lines[2],
-      "  Dining Out \u2014 Budgeted: $100.00  Spent: ($50.00)  Available: $50.00",
+      "  [cat-2]  Dining Out \u2014 Budgeted: $100.00  Spent: ($50.00)  Available: $50.00",
     );
   });
 
@@ -521,6 +590,7 @@ describe("formatMonthSummary", () => {
 describe("formatScheduledTransaction", () => {
   it("formats a basic scheduled transaction", () => {
     const st = makeScheduledTransaction({
+      id: "st-test-id",
       frequency: "monthly",
       amount: -100000,
       payee_name: "Netflix",
@@ -530,7 +600,7 @@ describe("formatScheduledTransaction", () => {
     const result = formatScheduledTransaction(st, TEST_CURRENCY);
     assertEquals(
       result,
-      "Every month \u2014 ($100.00)  Netflix  Entertainment  Next: 2024-02-15",
+      "[st-test-id]  Every month \u2014 ($100.00)  Netflix  Entertainment  Next: 2024-02-15",
     );
   });
 
@@ -552,7 +622,7 @@ describe("formatScheduledTransaction", () => {
   it("formats weekly frequency", () => {
     const st = makeScheduledTransaction({ frequency: "weekly" });
     const result = formatScheduledTransaction(st, TEST_CURRENCY);
-    assertEquals(result.startsWith("Every week"), true);
+    assertEquals(result.includes("Every week"), true);
   });
 
   it("includes memo when present", () => {

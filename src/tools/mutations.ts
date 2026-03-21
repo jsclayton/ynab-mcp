@@ -77,11 +77,15 @@ export function registerMutationTools(
       transactions: z
         .array(TransactionInput)
         .optional()
-        .describe("Transactions to create (required for 'create' action)"),
+        .describe(
+          "Transactions to create — pass ALL transactions in a single call rather than one at a time (required for 'create' action)",
+        ),
       updates: z
         .array(TransactionUpdate)
         .optional()
-        .describe("Transaction updates (required for 'update' action)"),
+        .describe(
+          "Transaction updates — pass ALL updates in a single call rather than one at a time (required for 'update' action)",
+        ),
       transaction_id: z
         .string()
         .optional()
