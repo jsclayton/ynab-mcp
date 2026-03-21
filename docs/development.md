@@ -9,16 +9,16 @@ deno task test
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `deno task test` | Run all tests |
-| `deno task test:watch` | Run tests in watch mode |
-| `deno task check` | Type-check entry points |
-| `deno task lint` | Lint all source files |
-| `deno task fmt` | Format all source files |
-| `deno task start` | Run stdio server |
-| `deno task serve` | Run HTTP server (port 8080) |
-| `deno task dev` | Run stdio server with watch mode |
+| Command                | Description                      |
+| ---------------------- | -------------------------------- |
+| `deno task test`       | Run all tests                    |
+| `deno task test:watch` | Run tests in watch mode          |
+| `deno task check`      | Type-check entry points          |
+| `deno task lint`       | Lint all source files            |
+| `deno task fmt`        | Format all source files          |
+| `deno task start`      | Run stdio server                 |
+| `deno task serve`      | Run HTTP server (port 8080)      |
+| `deno task dev`        | Run stdio server with watch mode |
 
 Run a single test file:
 
@@ -63,10 +63,12 @@ All tests mock `globalThis.fetch` — no real YNAB API calls are made.
 
 ### `mockFetch()`
 
-Central test utility from `src/testing/helpers.ts`. Intercepts fetch calls, matches by URL pattern (string or regex) and HTTP method, returns canned responses.
+Central test utility from `src/testing/helpers.ts`. Intercepts fetch calls,
+matches by URL pattern (string or regex) and HTTP method, returns canned
+responses.
 
 ```typescript
-import { mockFetch, makePlan } from "../testing/helpers.ts";
+import { makePlan, mockFetch } from "../testing/helpers.ts";
 
 let fetchMock: ReturnType<typeof mockFetch>;
 
@@ -92,17 +94,21 @@ it("fetches plans", async () => {
 
 ### Fixture Factories
 
-`makePlan()`, `makeAccount()`, `makeCategory()`, `makeCategoryGroup()`, `makePayee()`, `makeTransaction()`, `makeSubTransaction()`, `makeScheduledTransaction()`, `makeMonthDetail()`, `makeMonthSummary()`
+`makePlan()`, `makeAccount()`, `makeCategory()`, `makeCategoryGroup()`,
+`makePayee()`, `makeTransaction()`, `makeSubTransaction()`,
+`makeScheduledTransaction()`, `makeMonthDetail()`, `makeMonthSummary()`
 
-Each produces a complete, valid YNAB entity with sensible defaults. Pass `Partial<T>` to override specific fields:
+Each produces a complete, valid YNAB entity with sensible defaults. Pass
+`Partial<T>` to override specific fields:
 
 ```typescript
-makeTransaction({ amount: -50000, cleared: "uncleared" })
+makeTransaction({ amount: -50000, cleared: "uncleared" });
 ```
 
 ## Adding a Tool
 
-1. Create `src/tools/my_tool.ts` exporting `registerMyTools(server, client, cache)`
+1. Create `src/tools/my_tool.ts` exporting
+   `registerMyTools(server, client, cache)`
 2. Use `server.tool(name, description, zodSchema, annotations, handler)`
 3. Import and call from `src/server.ts` in `createServer()`
 4. Create `src/tools/my_tool_test.ts` with mockFetch-based tests
