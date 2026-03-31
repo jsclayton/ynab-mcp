@@ -33,6 +33,6 @@
       "automerge": false
     }
   ],
-  "schedule": ["before 6am on weekdays"],
+  "schedule": ["* 0-5 * * 1-5"],
   "timezone": "America/New_York"
 }
