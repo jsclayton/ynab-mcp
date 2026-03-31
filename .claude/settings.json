@@ -6,7 +6,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'export PATH=\"$HOME/.deno/bin:$PATH\"; if ! command -v deno &>/dev/null; then curl -fsSL https://deno.land/install.sh | sh; fi; export DENO_TLS_CA_STORE=system; cd /home/user/ynab-mcp && deno install 2>&1 | tail -5'"
+            "command": "echo 'DENO_TLS_CA_STORE=system' >> \"$CLAUDE_ENV_FILE\" && echo 'PATH=$HOME/.deno/bin:$PATH' >> \"$CLAUDE_ENV_FILE\""
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'export PATH=\"$HOME/.deno/bin:$PATH\"; if ! command -v deno &>/dev/null; then curl -fsSL https://deno.land/install.sh | sh; fi; export DENO_TLS_CA_STORE=system; deno install 2>&1 | tail -5'"
           }
         ]
       }
