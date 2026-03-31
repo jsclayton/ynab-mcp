@@ -54,7 +54,12 @@ jobs:
         id: tags
         run: |
           IMAGE="ghcr.io/jsclayton/ynab-mcp"
-          SHA="${{ github.sha }}"
+          # Use the PR head SHA (not the merge commit) for pull_request events
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            SHA="${{ github.sha }}"
+          fi
           SHORT_SHA="${SHA:0:7}"
           TAGS=""
 
