@@ -1,8 +1,11 @@
 name: CI
+
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -15,3 +18,84 @@ jobs:
       - run: deno lint
       - run: deno check src/stdio.ts src/http.ts
       - run: deno test --allow-env --allow-read src/
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno publish
+
+  docker:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags
+        id: tags
+        run: |
+          IMAGE="ghcr.io/jsclayton/ynab-mcp"
+          # Use the PR head SHA (not the merge commit) for pull_request events
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            SHA="${{ github.sha }}"
+          fi
+          SHORT_SHA="${SHA:0:7}"
+          TAGS=""
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # Sanitize branch name for Docker tags (replace / with -)
+            BRANCH=$(echo "${{ github.head_ref }}" | sed 's|/|-|g')
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+            TAGS="${IMAGE}:${BRANCH}-${SHORT_SHA}"
+            TAGS="${TAGS},${IMAGE}:${BRANCH}"
+            TAGS="${TAGS},${IMAGE}:pr-${PR_NUMBER}"
+          else
+            REF="${{ github.ref }}"
+            if [[ "$REF" == refs/tags/v* ]]; then
+              TAG="${REF#refs/tags/}"
+              BRANCH="main"
+              TAGS="${IMAGE}:${BRANCH}-${SHORT_SHA}"
+              TAGS="${TAGS},${IMAGE}:${BRANCH}"
+              TAGS="${TAGS},${IMAGE}:unstable"
+              TAGS="${TAGS},${IMAGE}:${TAG}"
+            else
+              # Sanitize branch name for Docker tags (replace / with -)
+              BRANCH=$(echo "${REF#refs/heads/}" | sed 's|/|-|g')
+              TAGS="${IMAGE}:${BRANCH}-${SHORT_SHA}"
+              TAGS="${TAGS},${IMAGE}:${BRANCH}"
+              if [ "$BRANCH" = "main" ]; then
+                TAGS="${TAGS},${IMAGE}:unstable"
+              fi
+            fi
+          fi
+
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

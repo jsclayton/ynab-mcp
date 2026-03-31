@@ -46,6 +46,29 @@ YNAB_ACCESS_TOKEN=your-token-here deno run --allow-net --allow-env jsr:@jsclayto
 # → http://localhost:8080/mcp
 ```
 
+### Docker
+
+```bash
+docker run -d \
+  -e YNAB_ACCESS_TOKEN=your-token-here \
+  -p 8080:8080 \
+  ghcr.io/jsclayton/ynab-mcp:latest
+# → http://localhost:8080/mcp
+```
+
+The image includes a health check on `/health`. All [configuration](#configuration)
+is passed via environment variables. To persist the cache across restarts, mount
+a volume:
+
+```bash
+docker run -d \
+  -e YNAB_ACCESS_TOKEN=your-token-here \
+  -e YNAB_CACHE_PATH=/cache \
+  -v ynab-cache:/cache \
+  -p 8080:8080 \
+  ghcr.io/jsclayton/ynab-mcp:latest
+```
+
 ## What You Can Do
 
 **Analyze spending** — Break down spending by category, track trends over time,
@@ -69,6 +92,7 @@ goals, rename payees, and manage scheduled transactions.
 | `YNAB_READ_ONLY`       | No       | `false` | Set to `true` to hide all mutation tools                         |
 | `YNAB_DEFAULT_PLAN_ID` | No       | —       | Default budget plan ID                                           |
 | `YNAB_CACHE_PATH`      | No       | —       | Directory for persistent cache (e.g., `~/.cache/ynab-mcp`)       |
+| `PORT`                 | No       | `8080`  | HTTP server port (HTTP transport only)                           |
 
 ## Documentation
 
