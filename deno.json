@@ -10,10 +10,10 @@
     "exclude": ["src/testing/", "**/*_test.ts"]
   },
   "imports": {
-    "@modelcontextprotocol/sdk/server/mcp.js": "npm:@modelcontextprotocol/sdk@1.27.1/server/mcp.js",
-    "@modelcontextprotocol/sdk/server/stdio.js": "npm:@modelcontextprotocol/sdk@1.27.1/server/stdio.js",
-    "@modelcontextprotocol/sdk/server/streamableHttp.js": "npm:@modelcontextprotocol/sdk@1.27.1/server/streamableHttp.js",
-    "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js": "npm:@modelcontextprotocol/sdk@1.27.1/server/webStandardStreamableHttp.js",
+    "@modelcontextprotocol/sdk/server/mcp.js": "npm:@modelcontextprotocol/sdk@1.28.0/server/mcp.js",
+    "@modelcontextprotocol/sdk/server/stdio.js": "npm:@modelcontextprotocol/sdk@1.28.0/server/stdio.js",
+    "@modelcontextprotocol/sdk/server/streamableHttp.js": "npm:@modelcontextprotocol/sdk@1.28.0/server/streamableHttp.js",
+    "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js": "npm:@modelcontextprotocol/sdk@1.28.0/server/webStandardStreamableHttp.js",
     "@hono/mcp": "jsr:@hono/mcp@0.2.0",
     "hono": "jsr:@hono/hono@4.12.9",
     "hono/": "jsr:@hono/hono@4.12.9/",
