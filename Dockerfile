@@ -7,7 +7,7 @@ RUN deno install
 FROM denoland/deno:alpine
 
 WORKDIR /app
-COPY --from=deps /root/.cache/deno /root/.cache/deno
+COPY --from=deps /deno-dir/ /deno-dir/
 COPY deno.json .
 COPY src/ src/
 
