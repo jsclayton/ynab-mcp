@@ -32,7 +32,8 @@ jobs:
           TAGS=""
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BRANCH="${{ github.head_ref }}"
+            # Sanitize branch name for Docker tags (replace / with -)
+            BRANCH=$(echo "${{ github.head_ref }}" | sed 's|/|-|g')
             PR_NUMBER="${{ github.event.pull_request.number }}"
             TAGS="${IMAGE}:${BRANCH}-${SHORT_SHA}"
             TAGS="${TAGS},${IMAGE}:${BRANCH}"
@@ -47,7 +48,8 @@ jobs:
               TAGS="${TAGS},${IMAGE}:unstable"
               TAGS="${TAGS},${IMAGE}:${TAG}"
             else
-              BRANCH="${REF#refs/heads/}"
+              # Sanitize branch name for Docker tags (replace / with -)
+              BRANCH=$(echo "${REF#refs/heads/}" | sed 's|/|-|g')
               TAGS="${IMAGE}:${BRANCH}-${SHORT_SHA}"
               TAGS="${TAGS},${IMAGE}:${BRANCH}"
               if [ "$BRANCH" = "main" ]; then
@@ -56,8 +58,6 @@ jobs:
             fi
           fi
 
-          # Sanitize branch names for Docker tags (replace / with -)
-          TAGS=$(echo "$TAGS" | sed 's|/|-|g')
           echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
 
       - uses: docker/build-push-action@v6
