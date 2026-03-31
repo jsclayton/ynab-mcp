@@ -4,7 +4,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["deno\\.json$"],
+      "managerFilePatterns": ["**/deno.json"],
       "matchStrings": [
         "\"npm:(?<depName>@?[^@]+)@(?<currentValue>[^\"'/]+)"
       ],
@@ -12,7 +12,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["deno\\.json$"],
+      "managerFilePatterns": ["**/deno.json"],
       "matchStrings": [
         "\"jsr:@(?<scope>[^/]+)/(?<package>[^@]+)@(?<currentValue>[^\"'/]+)"
       ],
