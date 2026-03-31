@@ -593,7 +593,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@hono/hono@4.12.8",
+      "jsr:@hono/hono@4.12.9",
       "jsr:@hono/mcp@0.2.0",
       "jsr:@std/assert@1.0.19",
       "jsr:@std/testing@1.0.17",
