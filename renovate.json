@@ -32,7 +32,5 @@
       "matchUpdateTypes": ["major"],
       "automerge": false
     }
-  ],
-  "schedule": ["* 0-5 * * 1-5"],
-  "timezone": "America/New_York"
+  ]
 }
