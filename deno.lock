@@ -2,25 +2,21 @@
   "version": "5",
   "specifiers": {
     "jsr:@hono-rate-limiter/hono-rate-limiter@~0.4.2": "0.4.2",
-    "jsr:@hono/hono@4": "4.12.8",
     "jsr:@hono/hono@^4.10.6": "4.12.8",
     "jsr:@hono/hono@^4.6.12": "4.12.8",
-    "jsr:@hono/mcp@0.2": "0.2.0",
-    "jsr:@std/assert@*": "1.0.19",
-    "jsr:@std/assert@1": "1.0.19",
+    "jsr:@hono/mcp@0.2.0": "0.2.0",
+    "jsr:@std/assert@1.0.19": "1.0.19",
     "jsr:@std/assert@^1.0.17": "1.0.19",
     "jsr:@std/async@^1.1.0": "1.2.0",
     "jsr:@std/data-structures@^1.0.10": "1.0.10",
     "jsr:@std/fs@^1.0.22": "1.0.23",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
-    "jsr:@std/testing@*": "1.0.17",
-    "jsr:@std/testing@1": "1.0.17",
+    "jsr:@std/testing@1.0.17": "1.0.17",
     "npm:@modelcontextprotocol/sdk@1.27.1": "1.27.1_zod@3.25.76",
     "npm:@modelcontextprotocol/sdk@^1.19.1": "1.27.1_zod@3.25.76",
-    "npm:@modelcontextprotocol/sdk@^1.27.1": "1.27.1_zod@3.25.76",
     "npm:pkce-challenge@5": "5.0.1",
-    "npm:zod@^3.24.0": "3.25.76",
+    "npm:zod@3.25.76": "3.25.76",
     "npm:zod@^3.25.34": "3.25.76"
   },
   "jsr": {
@@ -597,12 +593,12 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@hono/hono@4",
-      "jsr:@hono/mcp@0.2",
-      "jsr:@std/assert@1",
-      "jsr:@std/testing@1",
-      "npm:@modelcontextprotocol/sdk@^1.27.1",
-      "npm:zod@^3.24.0"
+      "jsr:@hono/hono@4.12.8",
+      "jsr:@hono/mcp@0.2.0",
+      "jsr:@std/assert@1.0.19",
+      "jsr:@std/testing@1.0.17",
+      "npm:@modelcontextprotocol/sdk@1.27.1",
+      "npm:zod@3.25.76"
     ]
   }
 }
