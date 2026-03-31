@@ -1,14 +1,14 @@
 FROM denoland/deno:alpine AS deps
 
 WORKDIR /app
-COPY deno.json .
-RUN deno install
+COPY deno.json deno.lock .
+RUN deno install --frozen
 
 FROM denoland/deno:alpine
 
 WORKDIR /app
 COPY --from=deps /deno-dir/ /deno-dir/
-COPY deno.json .
+COPY deno.json deno.lock .
 COPY src/ src/
 
 EXPOSE 8080

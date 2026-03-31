@@ -5,7 +5,6 @@
 .gitignore
 .cache/
 node_modules/
-deno.lock
 docs/
 *.md
 LICENSE.txt
