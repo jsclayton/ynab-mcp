@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["deno\\.json$"],
+      "matchStrings": [
+        "\"npm:(?<depName>@?[^@]+)@(?<currentValue>[^\"'/]+)"
+      ],
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["deno\\.json$"],
+      "matchStrings": [
+        "\"jsr:@(?<scope>[^/]+)/(?<package>[^@]+)@(?<currentValue>[^\"'/]+)"
+      ],
+      "depNameTemplate": "@{{{scope}}}/{{{package}}}",
+      "packageNameTemplate": "@jsr/{{{scope}}}__{{{package}}}",
+      "datasourceTemplate": "npm",
+      "registryUrlTemplate": "https://npm.jsr.io"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ],
+  "schedule": ["before 6am on weekdays"],
+  "timezone": "America/New_York"
+}
